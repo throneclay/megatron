@@ -52,12 +52,12 @@
       $("#forward")
         .mousedown(function(){
           $.get("/action/", {'act':"move_forward"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
         .mouseup(function(){
           $.get("/action/", {'act':"halt"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
 
@@ -65,70 +65,70 @@
       $("#backward")
         .mousedown(function(){
           $.get("/action/", {'act':"move_backward"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
         .mouseup(function(){
           $.get("/action/", {'act':"halt"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
 
       $("#left")
         .mousedown(function(){
           $.get("/action/", {'act':"move_left"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
         .mouseup(function(){
           $.get("/action/", {'act':"halt"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
 
       $("#right")
         .mousedown(function(){
           $.get("/action/", {'act':"move_right"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
         .mouseup(function(){
           $.get("/action/", {'act':"halt"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	  })
         })
 
       $("#servo_up").click(function(){
 	$.get("/servo/", {'act':"servo_up"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
             $('#current_v').html(ret)
 	})
       })
 
       $("#servo_down").click(function(){
 	$.get("/servo/", {'act':"servo_down"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
             $('#current_v').html(ret)
 	})
       })
 
       $("#servo_left").click(function(){
 	$.get("/servo/", {'act':"servo_left"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
             $('#current_h').html(ret)
 	})
       })
 
       $("#servo_right").click(function(){
 	$.get("/servo/", {'act':"servo_right"}, function(ret){
-            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
             $('#current_h').html(ret)
 	})
       })
 
       $("#reset").click(function(){
 	$.get("/servo/", {'act':"reset"}, function(ret){
-          $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+          $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
 	})
       })
     });

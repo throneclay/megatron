@@ -45,6 +45,7 @@ class CarHandle(object):
         self.cfg = MegatronCfg()
         self.bus = smbus.SMBus(1)
         self.last_cmd = ''
+	self.cnt = 0x08
 
     def mega_write_cmd(self, cmd, data):
         cmd_list = self.cfg.op_list
@@ -59,7 +60,8 @@ class CarHandle(object):
     def motor_move(self, cmd):
         cmd_list = self.cfg.op_list
         self.last_cmd = cmd
-        self.mega_write_cmd(cmd, 0x00)
+        #self.mega_write_cmd(cmd, 0x00)
+        self.mega_write_cmd(cmd, self.cnt)
 
     def servo_move(self, cmd):
         self.mega_write_cmd(cmd, 0x00)
