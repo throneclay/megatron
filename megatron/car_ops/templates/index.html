@@ -15,6 +15,7 @@
     <button style="height:60px;width:60px" type="button" id='right'>right</button>
     <button style="height:60px;width:60px" type="button" id='stable'>stable</button>
     <button style="height:60px;width:60px" type="button" id='back'>back</button>
+    <button style="height:60px;width:60px" type="button" id='shift'>stream shift</button>
 </form>
 
 <form action="/servo/" method="get">
@@ -30,15 +31,22 @@
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
     var fpv_ip="192.168.199.150"
+    var action_ss="snapshot"
     $(document).ready(function(){
       $("#stable").click(function(){
 	fpv_ip = "192.168.199.150"
-        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+        action_ss="snapshot"
+        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
       })
 
       $("#back").click(function(){
 	fpv_ip = "192.168.199.209"
-        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=stream")
+        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
+      })
+
+      $("#shift").click(function(){
+	action_ss="stream"
+        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action="+action_ss)
       })
 
       $("#forward")
