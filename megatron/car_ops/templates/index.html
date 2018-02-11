@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+</head>
+<body>
+    <center>
+        <img id='fpv' src="http://192.168.199.150:8080/?action=snapshot" />
+    </center>
+
+<form action="/action/" method="get">
+    <button style="height:60px;width:60px" type="button" id='forward'>forward</button>
+    <button style="height:60px;width:60px" type="button" id='backward'>backward</button>
+    <button style="height:60px;width:60px" type="button" id='left'>left</button>
+    <button style="height:60px;width:60px" type="button" id='right'>right</button>
+    <button style="height:60px;width:60px" type="button" id='stable'>stable</button>
+    <button style="height:60px;width:60px" type="button" id='back'>back</button>
+</form>
+
+<form action="/servo/" method="get">
+    <p>current_h: <span id='current_h'></span></p>
+    <p>current_v: <span id='current_v'></span></p>
+    <button style="height:60px;width:60px" type="button" id='servo_up'>servo_up</button>
+    <button style="height:60px;width:60px" type="button" id='servo_down'>servo_down</button>
+    <button style="height:60px;width:60px" type="button" id='servo_left'>servo_left</button>
+    <button style="height:60px;width:60px" type="button" id='servo_right'>servo_right</button>
+    <button style="height:60px;width:60px" type="button" id='reset'>reset</button>
+</form>
+
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    var fpv_ip="192.168.199.150"
+    $(document).ready(function(){
+      $("#stable").click(function(){
+	fpv_ip = "192.168.199.150"
+        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+      })
+
+      $("#back").click(function(){
+	fpv_ip = "192.168.199.209"
+        $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=stream")
+      })
+
+      $("#forward")
+        .mousedown(function(){
+          $.get("/action/", {'act':"move_forward"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+        .mouseup(function(){
+          $.get("/action/", {'act':"halt"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+
+
+      $("#backward")
+        .mousedown(function(){
+          $.get("/action/", {'act':"move_backward"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+        .mouseup(function(){
+          $.get("/action/", {'act':"halt"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+
+      $("#left")
+        .mousedown(function(){
+          $.get("/action/", {'act':"move_left"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+        .mouseup(function(){
+          $.get("/action/", {'act':"halt"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+
+      $("#right")
+        .mousedown(function(){
+          $.get("/action/", {'act':"move_right"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+        .mouseup(function(){
+          $.get("/action/", {'act':"halt"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	  })
+        })
+
+      $("#servo_up").click(function(){
+	$.get("/servo/", {'act':"servo_up"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#current_v').html(ret)
+	})
+      })
+
+      $("#servo_down").click(function(){
+	$.get("/servo/", {'act':"servo_down"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#current_v').html(ret)
+	})
+      })
+
+      $("#servo_left").click(function(){
+	$.get("/servo/", {'act':"servo_left"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#current_h').html(ret)
+	})
+      })
+
+      $("#servo_right").click(function(){
+	$.get("/servo/", {'act':"servo_right"}, function(ret){
+            $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+            $('#current_h').html(ret)
+	})
+      })
+
+      $("#reset").click(function(){
+	$.get("/servo/", {'act':"reset"}, function(ret){
+          $('#fpv').attr("src","http://"+fpv_ip+":8080/?action=snapshot")
+	})
+      })
+    });
+</script>
+
+</body>
+</html>
