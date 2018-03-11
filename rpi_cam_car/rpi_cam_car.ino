@@ -21,6 +21,8 @@ public:
     , left_backward_speed(default_speed)
     , right_forward_speed(default_speed)
     , right_backward_speed(default_speed)
+    , left_led_light(default_light)
+    , right_led_light(default_light)
     , horizontal_min(default_h_min)
     , horizontal_max(default_h_max)
     , vertical_min(default_v_min)
@@ -41,6 +43,8 @@ public:
     left_backward_speed = default_speed;
     right_forward_speed = default_speed;
     right_backward_speed = default_speed;
+    left_led_light = default_light;
+    right_led_light = default_light;
     horizontal_min = default_h_min;
     horizontal_max = default_h_max;
     vertical_min = default_v_min;
@@ -53,6 +57,7 @@ public:
   }
   
   const static unsigned char default_speed = 0xff;
+  const static unsigned char default_light = 50;
   const static unsigned char default_step = 5;
   const static unsigned char default_factor = 4;
   const static unsigned char default_h_min = 20;
@@ -64,6 +69,9 @@ public:
   unsigned char right_forward_speed;
   unsigned char left_backward_speed;
   unsigned char right_backward_speed;
+
+  unsigned char left_led_light;
+  unsigned char right_led_light;
 
   unsigned char horizontal_max, horizontal_min; // min means right, max mean left
   unsigned char vertical_max, vertical_min; // min means up, max means down
@@ -79,9 +87,46 @@ MegatronCfg m_cfg;
 
 AF_DCMotor _left_motor(3);
 AF_DCMotor _right_motor(1);
+AF_DCMotor _left_led(4);
+AF_DCMotor _right_led(2);
 
 Servo _horizontal_servo;
 Servo _vertical_servo;
+
+void light_up_level0(unsigned int times) {
+  _left_led.setSpeed(m_cfg.left_led_light);
+  _right_led.setSpeed(m_cfg.right_led_light);
+  if (times == 0){
+     _left_led.run(FORWARD);
+     _right_led.run(FORWARD);
+  } else {
+    _left_led.run(FORWARD);
+    _right_led.run(FORWARD);
+    delay(times << m_cfg.factor);
+    _left_led.run(RELEASE);
+    _right_led.run(RELEASE);
+  }
+}
+
+void light_up_level1(unsigned int times) {
+  _left_led.setSpeed(m_cfg.left_led_light);
+  _right_led.setSpeed(m_cfg.right_led_light);
+  if (times == 0){
+     _left_led.run(BACKWARD);
+     _right_led.run(BACKWARD);
+  } else {
+    _left_led.run(BACKWARD);
+    _right_led.run(BACKWARD);
+    delay(times << m_cfg.factor);
+    _left_led.run(RELEASE);
+    _right_led.run(RELEASE);
+  }
+}
+
+void light_down(unsigned int times) {
+  _left_led.run(RELEASE);
+  _right_led.run(RELEASE);
+}
 
 void move_forward(unsigned int times){
   if (times == 0){
@@ -206,7 +251,8 @@ void servo_right(unsigned int times) {
 void halt(unsigned int times) {
   _left_motor.run(RELEASE);
   _right_motor.run(RELEASE);
-
+  _left_motor.run(RELEASE);
+  _right_motor.run(RELEASE);
 }
 
 void reset(unsigned int times) {
@@ -217,8 +263,12 @@ void reset(unsigned int times) {
 
   _left_motor.setSpeed(m_cfg.left_forward_speed);
   _right_motor.setSpeed(m_cfg.right_forward_speed);
+  _left_led.setSpeed(m_cfg.left_led_light);
+  _right_led.setSpeed(m_cfg.right_led_light);
   _left_motor.run(RELEASE);
   _right_motor.run(RELEASE);
+  _left_led.run(RELEASE);
+  _right_led.run(RELEASE);
 }
 
 unsigned char flush_data = 250;
@@ -239,6 +289,8 @@ void prepare_flush_data(unsigned int times){
     case 11: flush_data = m_cfg.v_step; break;
     case 12: flush_data = m_cfg.h_step; break;
     case 13: flush_data = m_cfg.factor; break;
+    case 14: flush_data = m_cfg.left_led_light; break;
+    case 15: flush_data = m_cfg.right_led_light; break;
     default: flush_data = 0xff; break;    
   }
 }
@@ -264,6 +316,8 @@ void update_m_cfg(unsigned int times) {
     case 11: m_cfg.v_step = flush_data; break;
     case 12: m_cfg.h_step = flush_data; break;
     case 13: m_cfg.factor = flush_data; break;
+    case 14: m_cfg.left_led_light = flush_data; break;
+    case 15: m_cfg.right_led_light = flush_data; break;
     default: flush_data = 0xfe; break;    
   }
 }
@@ -286,14 +340,14 @@ void setup() {
 
 typedef void (*Opfunc)(unsigned int);
 Opfunc ops[16] = {reset, prepare_flush_data, update_flush_data, update_m_cfg, move_forward, move_backward, move_left, move_right,
-                servo_up, servo_down, servo_left, servo_right, halt};
+                servo_up, servo_down, servo_left, servo_right, halt, light_up_level0, light_up_level1, light_down};
 
 void loop() {
   if (c_flag) {
     c_flag = false;
     Serial.println((int)c_code);
     
-    if (c_code < 0x0f){
+    if (c_code <= 0x0f){
       ops[c_code](c_data);
     }
   }
